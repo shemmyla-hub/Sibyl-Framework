@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>The Sibyl Framework · WW Leadership Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F5F5F7;--bg2:#EBEBED;--surface:#FFFFFF;--surface2:#F9F9FB;--surface3:#F0F0F4;
+  --border:rgba(0,0,0,0.08);--border-mid:rgba(0,0,0,0.13);--border-hi:rgba(26,46,107,0.28);
+  --navy:#1A2E6B;--navy-h:#142357;--navy-soft:rgba(26,46,107,0.07);--navy-glow:rgba(26,46,107,0.13);
+  --text:#1D1D1F;--text2:#3A3A3C;--text3:#636366;--text4:#8E8E93;
+  --green:#34C759;--blue:#007AFF;--red:#FF3B30;--gold:#C9A96E;
+  --r-sm:10px;--r-md:13px;--r-lg:16px;--r-xl:18px;--r-pill:999px;
+  --shadow:0 1px 3px rgba(0,0,0,0.07),0 4px 14px rgba(0,0,0,0.05);
+  --shadow-card:0 2px 8px rgba(0,0,0,0.06),0 8px 24px rgba(0,0,0,0.07);
+  --mono:'DM Mono',monospace;
+  --serif:'Cormorant Garamond',Georgia,serif;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--serif);-webkit-font-smoothing:antialiased;min-height:100vh}
+#app{max-width:1080px;margin:0 auto;padding:40px 28px 64px}
+
+/* ── HEADER ── */
+.hdr{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:26px}
+.hdr-left{display:flex;flex-direction:column;gap:2px}
+.hdr-eyebrow{font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.32em;color:var(--navy);text-transform:uppercase;opacity:.75}
+.hdr-title{font-size:28px;font-weight:300;letter-spacing:.03em;color:var(--text);line-height:1.05}
+.hdr-title em{font-style:italic;color:var(--navy)}
+.hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
+.hdr-badge{display:inline-flex;align-items:center;gap:5px;background:var(--navy);color:#fff;font-family:var(--mono);font-size:8.5px;font-weight:500;letter-spacing:.2em;padding:5px 12px;border-radius:var(--r-pill)}
+.hdr-sub{font-family:var(--mono);font-size:8.5px;color:var(--text4);letter-spacing:.16em}
+
+/* ── TOOLBAR ── */
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:26px;flex-wrap:wrap}
+.tabs-bar{display:flex;background:var(--bg2);border:.5px solid var(--border-mid);border-radius:var(--r-lg);padding:3px;gap:2px}
+.tab{display:flex;align-items:center;gap:6px;background:none;border:none;padding:8px 18px;font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--text3);cursor:pointer;border-radius:13px;transition:background .18s,color .18s,box-shadow .18s;white-space:nowrap}
+.tab svg{width:14px;height:14px;flex-shrink:0;stroke:var(--text4);transition:stroke .18s}
+.tab:hover{color:var(--text2)}
+.tab.active{background:var(--navy);color:#fff;box-shadow:0 1px 4px rgba(26,46,107,.25)}
+.tab.active svg{stroke:#fff}
+
+.action-btns{display:flex;align-items:center;gap:8px}
+.btn-icon{display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:.5px solid var(--border-mid);color:var(--text2);font-family:var(--mono);font-size:9.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;padding:8px 14px;cursor:pointer;border-radius:var(--r-md);transition:background .18s,border-color .18s,transform .14s;box-shadow:var(--shadow)}
+.btn-icon svg{width:13px;height:13px;stroke:currentColor;flex-shrink:0}
+.btn-icon:hover{background:var(--surface2);border-color:var(--border-hi);transform:translateY(-1px)}
+.btn-icon:active{transform:scale(.97)}
+.btn-icon:disabled{opacity:.35;cursor:not-allowed;transform:none}
+.btn-icon.danger:hover{border-color:rgba(255,59,48,.3);color:var(--red)}
+.btn-primary-sm{display:inline-flex;align-items:center;gap:6px;background:var(--navy);border:none;color:#fff;font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;padding:8px 16px;cursor:pointer;border-radius:var(--r-md);transition:opacity .18s,transform .14s;box-shadow:0 2px 8px rgba(26,46,107,.22)}
+.btn-primary-sm svg{width:13px;height:13px;stroke:#fff;flex-shrink:0}
+.btn-primary-sm:hover{opacity:.88;transform:translateY(-1px)}
+.btn-primary-sm:active{transform:scale(.97)}
+
+/* ── INPUT ── */
+.field-label{font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.28em;color:var(--text4);text-transform:uppercase;margin-bottom:9px;display:flex;align-items:center;gap:9px}
+.field-label::after{content:'';flex:1;height:.5px;background:var(--border-mid)}
+textarea{width:100%;background:var(--surface);border:.5px solid var(--border-mid);border-radius:var(--r-lg);color:var(--text);font-family:var(--serif);font-size:17px;font-weight:400;line-height:1.65;padding:18px 22px;resize:none;outline:none;transition:border-color .22s,box-shadow .22s;min-height:118px;box-shadow:var(--shadow)}
+textarea::placeholder{color:var(--text4);font-style:italic}
+textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,122,255,.13)}
+.btn-row{display:flex;align-items:center;gap:14px;margin-top:14px}
+.btn-gen{display:flex;align-items:center;gap:7px;background:var(--navy);border:none;color:#fff;font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;padding:12px 24px;cursor:pointer;border-radius:var(--r-lg);transition:opacity .18s,transform .14s;box-shadow:0 2px 8px rgba(26,46,107,.24)}
+.btn-gen svg{width:14px;height:14px;stroke:#fff}
+.btn-gen:hover{opacity:.88;transform:translateY(-1px)}
+.btn-gen:active{transform:scale(.97)}
+.btn-gen:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.btn-hint{font-family:var(--mono);font-size:9px;color:var(--text4);letter-spacing:.12em}
+
+/* ── SPINNER ── */
+.spin-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;padding:52px 0}
+.spinner{width:28px;height:28px;border:2.5px solid var(--bg2);border-top-color:var(--navy);border-radius:50%;animation:spin .9s linear infinite}
+.spin-label{font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--text4)}
+
+/* ── DIVIDER ── */
+.sep-row{display:flex;align-items:center;gap:12px;margin:22px 0}
+.sep-row::before,.sep-row::after{content:'';flex:1;height:.5px;background:var(--border-mid)}
+.sep-d{width:5px;height:5px;background:var(--navy);opacity:.3;transform:rotate(45deg)}
+
+/* ── ROADMAP ── */
+.prog-title{font-size:21px;font-weight:600;letter-spacing:-.2px;color:var(--text);margin-bottom:3px}
+.prog-sub{font-size:14px;font-weight:400;color:var(--text3);line-height:1.6;margin-bottom:22px}
+.sec-ey{font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.3em;text-transform:uppercase;color:var(--navy);opacity:.8;margin-bottom:5px}
+
+.timeline{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:0}
+.mcard{background:var(--surface);border:.5px solid var(--border-mid);border-radius:var(--r-xl);padding:14px 13px 12px;cursor:pointer;transition:border-color .18s,box-shadow .18s,transform .18s;display:flex;flex-direction:column;gap:5px;min-height:112px;position:relative;overflow:hidden}
+.mcard::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--navy);opacity:0;transition:opacity .18s;border-radius:var(--r-xl) var(--r-xl) 0 0}
+.mcard:hover{border-color:var(--border-hi);box-shadow:0 4px 16px var(--navy-glow);transform:translateY(-2px)}
+.mcard:hover::before{opacity:.5}
+.mcard.active{background:var(--navy);border-color:var(--navy);box-shadow:0 6px 20px rgba(26,46,107,.22);transform:translateY(-2px)}
+.mcard.active::before{opacity:1;background:#fff}
+.mcard-num{font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.22em;color:var(--navy)}
+.mcard.active .mcard-num{color:rgba(255,255,255,.6)}
+.mcard-name{font-size:13.5px;font-weight:700;color:var(--text);line-height:1.2}
+.mcard.active .mcard-name{color:#fff}
+.mcard-theme{font-size:11px;font-weight:400;color:var(--text3);line-height:1.4;flex:1}
+.mcard.active .mcard-theme{color:rgba(255,255,255,.65)}
+.mcard-pip{width:5px;height:5px;border-radius:50%;background:var(--bg2);margin-top:auto;transition:background .18s}
+.mcard:hover .mcard-pip{background:var(--navy)}
+.mcard.active .mcard-pip{background:rgba(255,255,255,.4)}
+
+/* ── OKR PANEL ── */
+.okr-panel{background:var(--surface);border:.5px solid var(--border-mid);border-top:3px solid var(--navy);border-radius:0 0 var(--r-xl) var(--r-xl);padding:26px 30px;box-shadow:var(--shadow-card);animation:fadeUp .28s ease both}
+.okr-hdr{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:20px}
+.okr-ey{font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.28em;text-transform:uppercase;color:var(--navy);opacity:.8;margin-bottom:3px}
+.okr-title{font-size:21px;font-weight:600;letter-spacing:-.15px;color:var(--text)}
+.okr-sub{font-size:13px;font-weight:400;color:var(--text3);margin-top:2px}
+.okr-prog{font-family:var(--mono);font-size:10px;font-weight:500;color:var(--text4);text-align:right;line-height:1.9;background:var(--surface3);padding:8px 13px;border-radius:var(--r-md);border:.5px solid var(--border)}
+.okr-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.okr-item{background:var(--surface2);border:.5px solid var(--border);border-radius:var(--r-md);padding:13px 15px;transition:border-color .18s}
+.okr-item:hover{border-color:var(--border-hi)}
+.okr-item-type{font-family:var(--mono);font-size:8.5px;font-weight:600;letter-spacing:.25em;text-transform:uppercase;color:var(--navy);opacity:.8;margin-bottom:5px}
+.okr-item-txt{font-size:13px;font-weight:400;line-height:1.55;color:var(--text2)}
+.okr-del{margin-top:16px;padding-top:16px;border-top:.5px solid var(--border-mid);display:flex;gap:12px;align-items:flex-start}
+.okr-del-lbl{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--text4);white-space:nowrap;padding-top:2px}
+.okr-del-txt{font-size:13px;font-weight:400;color:var(--text3);line-height:1.5}
+
+/* ── ASSESSMENT ── */
+.q-list{display:flex;flex-direction:column;gap:8px}
+.qcard{background:var(--surface);border:.5px solid var(--border-mid);border-radius:var(--r-xl);padding:16px 20px;display:flex;gap:15px;align-items:flex-start;box-shadow:var(--shadow);transition:border-color .18s,transform .15s,box-shadow .18s;animation:fadeUp .35s ease both}
+.qcard:hover{border-color:var(--border-hi);box-shadow:0 4px 16px var(--navy-soft);transform:translateY(-1px)}
+.qnum{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--navy);min-width:22px;padding-top:2px}
+.qcont{flex:1}
+.qtxt{font-size:15px;font-weight:400;line-height:1.55;color:var(--text);margin-bottom:7px}
+.qmeta{display:flex;align-items:center;flex-wrap:wrap;gap:5px}
+.qmonth{font-family:var(--mono);font-size:10px;font-weight:500;color:var(--text4)}
+.qtag{padding:2px 9px;background:var(--navy-soft);border:.5px solid rgba(26,46,107,.18);border-radius:var(--r-pill);font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.1em;color:var(--navy)}
+
+/* ── SAVE/LOAD PANEL ── */
+.saved-panel{background:var(--surface);border:.5px solid var(--border-mid);border-radius:var(--r-xl);padding:22px 26px;box-shadow:var(--shadow-card);animation:fadeUp .3s ease both}
+.saved-panel-title{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:var(--navy);opacity:.8;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.saved-panel-title::after{content:'';flex:1;height:.5px;background:var(--border-mid)}
+.saved-list{display:flex;flex-direction:column;gap:8px}
+.saved-item{display:flex;align-items:center;gap:12px;background:var(--surface2);border:.5px solid var(--border);border-radius:var(--r-md);padding:12px 16px;transition:border-color .18s}
+.saved-item:hover{border-color:var(--border-hi)}
+.saved-item-info{flex:1;min-width:0}
+.saved-item-name{font-size:14px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.saved-item-meta{font-family:var(--mono);font-size:9px;color:var(--text4);margin-top:2px;letter-spacing:.08em}
+.saved-actions{display:flex;gap:6px;flex-shrink:0}
+
+/* ── PRESENTER MODE ── */
+.presenter-overlay{position:fixed;inset:0;background:#0A0F1E;z-index:9999;display:flex;flex-direction:column;overflow:hidden}
+.presenter-header{display:flex;align-items:center;justify-content:space-between;padding:20px 36px 16px;border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0}
+.presenter-logo{font-family:var(--serif);font-size:16px;font-weight:300;color:rgba(255,255,255,.7);letter-spacing:.06em}
+.presenter-logo em{font-style:italic;color:var(--gold)}
+.presenter-controls{display:flex;align-items:center;gap:12px}
+.presenter-prog{font-family:var(--mono);font-size:10px;color:rgba(255,255,255,.4);letter-spacing:.2em}
+.btn-p{display:inline-flex;align-items:center;justify-content:center;gap:6px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.75);font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;padding:8px 16px;cursor:pointer;border-radius:var(--r-md);transition:background .18s,border-color .18s}
+.btn-p svg{width:13px;height:13px;stroke:currentColor;flex-shrink:0}
+.btn-p:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.22)}
+.btn-p.exit{border-color:rgba(255,59,48,.35);color:rgba(255,100,90,.9)}
+.btn-p.exit:hover{background:rgba(255,59,48,.1)}
+.presenter-stage{flex:1;display:flex;align-items:center;justify-content:center;padding:32px 48px;overflow:hidden}
+.presenter-slide{width:100%;max-width:860px;animation:fadeUp .4s ease both}
+.ps-month-num{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.35em;color:var(--gold);text-transform:uppercase;margin-bottom:10px}
+.ps-title{font-size:52px;font-weight:300;letter-spacing:-.5px;color:#FFFFFF;line-height:1.05;margin-bottom:8px}
+.ps-theme{font-size:20px;font-weight:300;font-style:italic;color:rgba(255,255,255,.5);margin-bottom:40px}
+.ps-okrs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px}
+.ps-okr{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:var(--r-lg);padding:18px 20px}
+.ps-okr-type{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);opacity:.85;margin-bottom:7px}
+.ps-okr-txt{font-size:15px;font-weight:400;line-height:1.55;color:rgba(255,255,255,.82)}
+.ps-del{display:flex;gap:14px;align-items:flex-start;background:rgba(201,169,110,.06);border:1px solid rgba(201,169,110,.18);border-radius:var(--r-md);padding:14px 18px}
+.ps-del-lbl{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);opacity:.7;white-space:nowrap;padding-top:2px}
+.ps-del-txt{font-size:14px;font-style:italic;color:rgba(255,255,255,.55);line-height:1.5}
+.presenter-dots{display:flex;align-items:center;justify-content:center;gap:8px;padding:16px;flex-shrink:0}
+.pdot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.18);cursor:pointer;transition:background .2s,transform .2s}
+.pdot.active{background:var(--gold);transform:scale(1.3)}
+.ps-hint{font-family:var(--mono);font-size:9px;color:rgba(255,255,255,.2);letter-spacing:.18em;text-align:center;padding-bottom:12px;flex-shrink:0}
+
+/* ── EMPTY STATE ── */
+.empty-wrap{display:flex;flex-direction:column;align-items:center;gap:12px;padding:64px 0;text-align:center}
+.empty-icon{width:52px;height:52px;border-radius:var(--r-xl);background:var(--surface);border:.5px solid var(--border-mid);display:flex;align-items:center;justify-content:center}
+.empty-icon svg{width:24px;height:24px;stroke:var(--text4)}
+.empty-title{font-size:18px;font-weight:600;color:var(--text3)}
+.empty-body{font-family:var(--mono);font-size:9px;color:var(--text4);max-width:300px;line-height:1.9;letter-spacing:.1em}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--text);color:#fff;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.14em;padding:11px 22px;border-radius:var(--r-pill);box-shadow:0 4px 24px rgba(0,0,0,.22);transition:transform .3s cubic-bezier(.34,1.56,.64,1),opacity .3s;opacity:0;z-index:99999;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+/* ── FOOTER ── */
+.footer{margin-top:44px;padding-top:18px;border-top:.5px solid var(--border-mid);display:flex;justify-content:space-between;align-items:flex-end;gap:16px}
+.foot-quote{font-size:14px;font-weight:400;font-style:italic;color:var(--text3);max-width:440px;line-height:1.55}
+.foot-attr{font-family:var(--mono);font-size:9px;color:var(--text4);margin-top:4px;letter-spacing:.16em}
+.foot-right{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
+.foot-brand{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--navy);opacity:.65}
+.foot-status{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:10px;font-weight:500;color:var(--text4)}
+.sdot{width:5px;height:5px;border-radius:50%;background:var(--green)}
+
+/* ── PRINT / PDF EXPORT ── */
+@media print {
+  .toolbar,.btn-row,.action-btns,.tabs-bar,.footer,.saved-panel,.toast,.presenter-overlay{display:none!important}
+  body{background:#fff;color:#000;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  #app{padding:20px;max-width:100%}
+  .hdr{border-bottom:2px solid #1A2E6B;padding-bottom:14px;margin-bottom:20px}
+  .hdr-badge{background:#1A2E6B!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .timeline{break-inside:avoid;page-break-inside:avoid}
+  .mcard{border:1px solid #ccc!important;transform:none!important;box-shadow:none!important}
+  .mcard.active{background:#1A2E6B!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .mcard.active .mcard-num,.mcard.active .mcard-name,.mcard.active .mcard-theme{color:#fff!important;-webkit-print-color-adjust:exact}
+  .okr-panel{break-inside:avoid;page-break-inside:avoid;box-shadow:none!important;border:1px solid #1A2E6B!important}
+  .okr-item{border:1px solid #ddd!important}
+  .okr-item-type{color:#1A2E6B!important}
+  .sec-ey,.okr-ey{color:#1A2E6B!important;-webkit-print-color-adjust:exact}
+  #panel-assess{display:block!important}
+  .q-list{page-break-before:always}
+  .qcard{border:1px solid #ddd!important;transform:none!important;box-shadow:none!important;break-inside:avoid;page-break-inside:avoid}
+  .qnum,.qtag{color:#1A2E6B!important;-webkit-print-color-adjust:exact}
+  .qtag{background:rgba(26,46,107,.08)!important;border:1px solid rgba(26,46,107,.2)!important;-webkit-print-color-adjust:exact}
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.qcard:nth-child(1){animation-delay:.03s}.qcard:nth-child(2){animation-delay:.06s}
+.qcard:nth-child(3){animation-delay:.09s}.qcard:nth-child(4){animation-delay:.12s}
+.qcard:nth-child(5){animation-delay:.15s}.qcard:nth-child(6){animation-delay:.18s}
+.qcard:nth-child(7){animation-delay:.21s}.qcard:nth-child(8){animation-delay:.24s}
+.qcard:nth-child(9){animation-delay:.27s}.qcard:nth-child(10){animation-delay:.30s}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- HEADER -->
+  <header class="hdr">
+    <div class="hdr-left">
+      <span class="hdr-eyebrow">WW Leadership Intelligence · Apple Sales</span>
+      <h1 class="hdr-title">The Sibyl <em>Framework</em></h1>
+    </div>
+    <div class="hdr-right">
+      <div class="hdr-badge">● WW Leadership Architect</div>
+      <span class="hdr-sub">Intelligent Curriculum Engine · Demo Mode</span>
+    </div>
+  </header>
+
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <div class="tabs-bar">
+      <button class="tab active" id="tab-roadmap" onclick="switchTab('roadmap')">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="3.5" rx="1.75"/><rect x="3" y="10.25" width="13" height="3.5" rx="1.75"/><rect x="3" y="16.5" width="9" height="3.5" rx="1.75"/></svg>
+        Roadmap Builder
+      </button>
+      <button class="tab" id="tab-assess" onclick="switchTab('assess')">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        Assessment
+      </button>
+      <button class="tab" id="tab-saved" onclick="switchTab('saved')">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Saved
+      </button>
+    </div>
+    <div class="action-btns">
+      <button class="btn-icon" id="btn-presenter" onclick="openPresenter()" disabled title="Presenter Mode — fullscreen slide walkthrough">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        Present
+      </button>
+      <button class="btn-icon" id="btn-save" onclick="saveRoadmap()" disabled title="Save roadmap to browser storage">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Save
+      </button>
+      <button class="btn-icon" id="btn-pdf" onclick="exportPDF()" disabled title="Export roadmap + assessment to PDF">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9 15 12 18 15 15"/></svg>
+        Export PDF
+      </button>
+    </div>
+  </div>
+
+  <!-- PANELS -->
+  <div id="panel-roadmap">
+    <div class="field-label">Business Goal</div>
+    <textarea id="goal-input" rows="4" placeholder="e.g. Develop a global AI-readiness culture across all business units, equipping 5,000 employees with foundational to advanced AI fluency within 6 months…"></textarea>
+    <div class="btn-row">
+      <button class="btn-gen" id="gen-btn" onclick="generateRoadmap()">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        Generate Roadmap
+      </button>
+      <span class="btn-hint" id="btn-hint">Keyword-driven engine · No external server required</span>
+    </div>
+    <div id="roadmap-area"></div>
+  </div>
+
+  <div id="panel-assess" style="display:none"><div id="assess-area"></div></div>
+  <div id="panel-saved" style="display:none"><div id="saved-area"></div></div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div>
+      <p class="foot-quote">"She who sees the path shapes the culture — and the culture shapes the world."</p>
+      <p class="foot-attr">— The Sibyl Framework · WW Leadership Intelligence · Apple Sales</p>
+    </div>
+    <div class="foot-right">
+      <span class="foot-brand">Sovereign Matriarch Series</span>
+      <span class="foot-status"><span class="sdot"></span>Simulation Engine Active</span>
+    </div>
+  </footer>
+</div>
+
+<!-- PRESENTER OVERLAY -->
+<div id="presenter-overlay" class="presenter-overlay" style="display:none" role="dialog" aria-label="Presenter Mode">
+  <div class="presenter-header">
+    <div class="presenter-logo">The Sibyl <em>Framework</em> &nbsp;·&nbsp; <span style="font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:rgba(255,255,255,.45)">WW LEADERSHIP INTELLIGENCE</span></div>
+    <div class="presenter-controls">
+      <span class="presenter-prog" id="ps-prog">1 / 6</span>
+      <button class="btn-p" onclick="psNav(-1)" aria-label="Previous slide">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Prev
+      </button>
+      <button class="btn-p" onclick="psNav(1)" aria-label="Next slide">
+        Next
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+      <button class="btn-p exit" onclick="closePresenter()" aria-label="Exit presenter mode">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        Exit
+      </button>
+    </div>
+  </div>
+  <div class="presenter-stage" id="ps-stage"></div>
+  <div class="presenter-dots" id="ps-dots"></div>
+  <div class="ps-hint">← → arrow keys to navigate · Esc to exit</div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+// ─────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────
+var roadmapData = null;
+var activeMonth = 0;
+var currentGoal = '';
+var psIndex = 0;
+var STORAGE_KEY = 'sibyl_saved_roadmaps_v2';
+
+// ─────────────────────────────────────────────
+// DOMAIN INTELLIGENCE ENGINE
+// ─────────────────────────────────────────────
+var DOMAIN_MAP = [
+  { keys:['ai','artificial intelligence','machine learning','ml','llm','generative','gpt','automation','data science','copilot','openai'], domain:'AI & Machine Learning', verb:'AI-readiness', skill:'artificial intelligence fluency' },
+  { keys:['leadership','leader','executive','manager','management','director','vp','c-suite','senior','people manager'], domain:'Leadership Development', verb:'leadership excellence', skill:'strategic leadership capability' },
+  { keys:['sales','revenue','quota','pipeline','crm','customer','deal','close','account','seller','selling'], domain:'Sales Enablement', verb:'sales performance', skill:'consultative selling mastery' },
+  { keys:['dei','diversity','equity','inclusion','belonging','culture','inclusive','underrepresented'], domain:'DEI & Culture', verb:'inclusive culture-building', skill:'equity and belonging fluency' },
+  { keys:['digital','technology','tech','cloud','saas','platform','software','digital transformation','modernisation','modernization'], domain:'Digital Transformation', verb:'digital fluency', skill:'technology adoption capability' },
+  { keys:['compliance','risk','legal','policy','regulatory','governance','audit','security','gdpr','sox'], domain:'Compliance & Risk', verb:'risk awareness', skill:'governance and compliance proficiency' },
+  { keys:['product','design','ux','innovation','agile','scrum','sprint','roadmap','launch','go-to-market'], domain:'Product & Innovation', verb:'product thinking', skill:'innovation and agile methodology' },
+  { keys:['coaching','mentoring','feedback','performance','talent','growth','career','succession','development'], domain:'Talent & Coaching', verb:'performance coaching', skill:'talent development expertise' },
+  { keys:['communication','presentation','storytelling','influence','stakeholder','executive presence','public speaking'], domain:'Communication & Influence', verb:'executive presence', skill:'strategic communication mastery' },
+  { keys:['operations','process','efficiency','lean','six sigma','workflow','productivity','kpi','continuous improvement'], domain:'Operations Excellence', verb:'operational efficiency', skill:'process optimization capability' },
+];
+
+var SCALE_MAP = [
+  { keys:['global','worldwide','ww','international','all regions','cross-regional','multi-region'], scale:'Global', scope:'across all international markets and regions' },
+  { keys:['enterprise','company-wide','organization','all employees','workforce','entire company'], scale:'Enterprise-Wide', scope:'across the entire organizational workforce' },
+  { keys:['team','department','unit','division','function','group','business unit'], scale:'Team', scope:'within targeted business units and functional teams' },
+];
+
+var AUDIENCE_MAP = [
+  { keys:['executive','c-suite','vp','director','senior leader','leadership team','c-level'], audience:'Senior Leaders', level:'executive' },
+  { keys:['manager','mid-level','people leader','team lead','front-line manager'], audience:'People Managers', level:'mid-management' },
+  { keys:['employee','staff','workforce','individual contributor','ic','team member','associate'], audience:'Individual Contributors', level:'foundational' },
+  { keys:['all','everyone','entire','whole'], audience:'All Employees', level:'multi-tiered' },
+];
+
+var NUM_RE = /(\d[\d,]*)\s*(employees?|people|learners?|staff|users?|participants?|members?|workers?)/i;
+
+function parseGoal(g) {
+  var l = g.toLowerCase();
+  var topD = DOMAIN_MAP[0], topScore = 0;
+  for (var i = 0; i < DOMAIN_MAP.length; i++) {
+    var score = DOMAIN_MAP[i].keys.filter(function(k){ return l.indexOf(k) !== -1; }).length;
+    if (score > topScore) { topScore = score; topD = DOMAIN_MAP[i]; }
+  }
+  var scale = { scale:'Organization', scope:'across the organization' };
+  for (var j = 0; j < SCALE_MAP.length; j++) {
+    if (SCALE_MAP[j].keys.some(function(k){ return l.indexOf(k) !== -1; })) { scale = SCALE_MAP[j]; break; }
+  }
+  var audience = { audience:'All Employees', level:'multi-tiered' };
+  for (var k = 0; k < AUDIENCE_MAP.length; k++) {
+    if (AUDIENCE_MAP[k].keys.some(function(kk){ return l.indexOf(kk) !== -1; })) { audience = AUDIENCE_MAP[k]; break; }
+  }
+  var nm = g.match(NUM_RE);
+  var headcount = nm ? nm[1].replace(/,/g,'') : null;
+  return { domain: topD, scale: scale, audience: audience, headcount: headcount };
+}
+
+function buildRoadmap(p) {
+  var D = p.domain, scale = p.scale, audience = p.audience, headcount = p.headcount;
+  var hc = headcount ? (headcount + ' ' + audience.audience.toLowerCase()) : audience.audience;
+  var phases = [
+    { name:'Foundation', theme:'Establishing ' + D.verb + ' baseline and shared vocabulary',
+      obj:'Build a common ' + D.skill + ' framework understood by all ' + audience.audience.toLowerCase(),
+      kr1:'85% of ' + hc + ' complete foundational ' + D.domain + ' assessment with passing score',
+      kr2:'100% of cohorts complete intake diagnostics and learning path assignments',
+      init:'Launch ' + D.domain + ' literacy bootcamp: self-paced modules, live kick-off, and cohort formation',
+      del:D.domain + ' Readiness Baseline Report & Cohort Learning Maps' },
+    { name:'Discovery', theme:'Contextualising ' + D.skill + ' within real business scenarios',
+      obj:'Connect ' + D.domain + ' principles to day-to-day role responsibilities and outcomes',
+      kr1:'90% of learners complete at least 2 applied case study exercises',
+      kr2:'Net Promoter Score for learning experience exceeds 45',
+      init:'Role-based scenario labs, guest practitioner panels, and peer learning circles',
+      del:'Role-Specific ' + D.domain + ' Application Playbooks' },
+    { name:'Application', theme:'Translating knowledge into measurable ' + D.verb + ' actions',
+      obj:'Enable ' + hc + ' to independently apply ' + D.skill + ' to live business challenges',
+      kr1:'75% of participants submit a completed capstone project or work sample',
+      kr2:'Manager scores show ≥20% behavioural uplift vs. Month 1 baseline',
+      init:'Capstone sprint: 30-day live project with coaching touchpoints and peer review',
+      del:'Applied ' + D.domain + ' Capstone Portfolio per Cohort' },
+    { name:'Integration', theme:'Embedding ' + D.skill + ' into team rituals and workflows',
+      obj:'Institutionalise ' + D.verb + ' practices so learning becomes a daily operational habit',
+      kr1:'80% of team leads adopt at least one new ' + D.domain + ' ritual into weekly cadence',
+      kr2:'LMS completion rate sustains above 78%',
+      init:'Team integration workshops, toolkit distribution, and manager enablement sessions',
+      del:D.domain + ' Integration Toolkit & Manager Enablement Guide' },
+    { name:'Scale', theme:'Expanding ' + D.verb + ' capability ' + scale.scope,
+      obj:'Cascade proven learning models to additional cohorts and geographies',
+      kr1:'Programme reach expands to ≥90% of target ' + audience.audience.toLowerCase() + ' population',
+      kr2:'25+ certified ' + D.domain + ' Champions network established',
+      init:'Train-the-trainer certification, champion activation, regional rollout sprint',
+      del:'Certified ' + D.domain + ' Champion Network & Regional Rollout Plan' },
+    { name:'Mastery', theme:'Measuring impact and sustaining a ' + D.verb + ' culture',
+      obj:'Demonstrate ROI and establish governance for continuous ' + D.skill + ' development',
+      kr1:'Executive dashboard shows ≥30% uplift in ' + D.domain + ' KPIs vs. programme start',
+      kr2:'Board-level impact summary validated and presented by programme sponsors',
+      init:'Impact sprint, retrospective workshops, and strategic roadmap for Year 2',
+      del:D.domain + ' ROI Impact Report & Year 2 Strategic Learning Roadmap' },
+  ];
+  return {
+    programTitle: D.domain + ' Accelerator · ' + scale.scale + ' Learning Architecture',
+    programSummary: 'A comprehensive 6-month curriculum designed to build deep ' + D.skill + ' ' + scale.scope + '. This programme equips ' + hc + ' with the knowledge, tools, and behavioural shifts required to sustain measurable impact beyond the learning journey.',
+    months: phases.map(function(ph, i) {
+      return {
+        num: String(i+1).padStart ? String(i+1).padStart(2,'0') : (i+1 < 10 ? '0'+(i+1) : ''+(i+1)),
+        name: ph.name, theme: ph.theme,
+        okrs: [
+          { type:'OBJECTIVE', text:ph.obj },
+          { type:'KEY RESULT', text:ph.kr1 },
+          { type:'KEY RESULT', text:ph.kr2 },
+          { type:'INITIATIVE', text:ph.init }
+        ],
+        deliverable: ph.del
+      };
+    })
+  };
+}
+
+function buildAssessment(p, rm) {
+  var D = p.domain, audience = p.audience, ms = rm.months;
+  var B = ['Knowledge','Comprehension','Application','Analysis','Synthesis','Evaluation'];
+  var T = ['Conceptual','Applied','Reflective'];
+  var qs = [
+    { text:'How would you define the core principles of ' + D.skill + ', and why are they strategically relevant for ' + audience.audience.toLowerCase() + ' at this organisation?', month:ms[0].name, bloom:B[1], type:T[0] },
+    { text:'During the Foundation phase, a colleague struggles to articulate the business case for ' + D.domain + '. What key argument would you use to build their confidence?', month:ms[0].name, bloom:B[2], type:T[1] },
+    { text:'In the Discovery phase, you encounter a scenario where ' + D.domain + ' principles conflict with an existing team workflow. How would you resolve this tension?', month:ms[1].name, bloom:B[3], type:T[1] },
+    { text:'What distinguishes a high-impact ' + D.domain + ' practitioner from someone with surface-level familiarity? Describe at least three differentiating behaviours.', month:ms[1].name, bloom:B[4], type:T[0] },
+    { text:'Reflecting on the Application phase capstone, what was the most significant challenge when translating ' + D.skill + ' into a live business context?', month:ms[2].name, bloom:B[5], type:T[2] },
+    { text:'A senior stakeholder questions the ROI of this ' + D.domain + ' programme. Using Month 3 metrics, construct a compelling, data-backed defence of the investment.', month:ms[2].name, bloom:B[3], type:T[1] },
+    { text:'How would you design a repeatable team ritual that embeds ' + D.skill + ' into daily operations without adding significant time burden to ' + audience.audience.toLowerCase() + '?', month:ms[3].name, bloom:B[4], type:T[1] },
+    { text:'Evaluate the Integration phase toolkit. Which element will drive the most sustained behavioural change, and what evidence supports your reasoning?', month:ms[3].name, bloom:B[5], type:T[2] },
+    { text:'As a certified ' + D.domain + ' Champion in the Scale phase, you are onboarding a new regional cohort. Design a 60-minute session that accelerates their path to competency.', month:ms[4].name, bloom:B[4], type:T[1] },
+    { text:'After this 6-month programme, how has your understanding of ' + D.verb + ' evolved? Identify the single most impactful shift and its implications for your team.', month:ms[5].name, bloom:B[5], type:T[2] },
+  ];
+  return qs.map(function(q, i) {
+    var n = i+1;
+    return Object.assign({ num: n < 10 ? '0'+n : ''+n }, q);
+  });
+}
+
+// ─────────────────────────────────────────────
+// UTILITIES
+// ─────────────────────────────────────────────
+function wait(ms) { return new Promise(function(r){ setTimeout(r, ms); }); }
+
+function toast(msg, dur) {
+  dur = dur || 2400;
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, dur);
+}
+
+function setActionBtns(enabled) {
+  ['btn-presenter','btn-save','btn-pdf'].forEach(function(id){
+    document.getElementById(id).disabled = !enabled;
+  });
+}
+
+// ─────────────────────────────────────────────
+// TABS
+// ─────────────────────────────────────────────
+function switchTab(tab) {
+  ['roadmap','assess','saved'].forEach(function(t) {
+    document.getElementById('tab-'+t).classList.toggle('active', t === tab);
+    document.getElementById('panel-'+t).style.display = t === tab ? 'block' : 'none';
+  });
+  if (tab === 'assess') renderAssessPanel();
+  if (tab === 'saved') renderSavedPanel();
+}
+
+// ─────────────────────────────────────────────
+// GENERATE
+// ─────────────────────────────────────────────
+async function generateRoadmap() {
+  var goal = document.getElementById('goal-input').value.trim();
+  if (!goal) { document.getElementById('goal-input').focus(); return; }
+  currentGoal = goal;
+  roadmapData = null;
+  activeMonth = 0;
+  var btn = document.getElementById('gen-btn');
+  btn.disabled = true;
+  document.getElementById('btn-hint').textContent = 'Parsing goal keywords…';
+  document.getElementById('roadmap-area').innerHTML = '<div class="sep-row"><div class="sep-d"></div></div><div class="spin-wrap"><div class="spinner"></div><span class="spin-label">Architecting your 6-month framework…</span></div>';
+  await wait(950);
+  try {
+    var parsed = parseGoal(goal);
+    var rm = buildRoadmap(parsed);
+    roadmapData = Object.assign({}, rm, { _parsed: parsed, _goal: goal, _ts: Date.now() });
+    setActionBtns(true);
+    renderRoadmap();
+  } catch(e) {
+    document.getElementById('roadmap-area').innerHTML = '<div style="background:#FFF2F2;border:.5px solid #FFCDD2;border-radius:13px;padding:14px 18px;font-family:var(--mono);font-size:12px;color:#C62828;">Error: ' + e.message + '</div>';
+  } finally {
+    btn.disabled = false;
+    document.getElementById('btn-hint').textContent = 'Keyword-driven engine · No external server required';
+  }
+}
+
+function buildOkrInner(m, idx) {
+  var ok = m.okrs.map(function(o){
+    return '<div class="okr-item"><div class="okr-item-type">' + o.type + '</div><div class="okr-item-txt">' + o.text + '</div></div>';
+  }).join('');
+  return '<div class="okr-hdr"><div><div class="okr-ey">Month ' + m.num + ' · OKR Detail</div><div class="okr-title">' + m.name + '</div><div class="okr-sub">' + m.theme + '</div></div><div class="okr-prog">' + (idx+1) + ' of 6 months<br>' + Math.round(((idx+1)/6)*100) + '% complete</div></div><div class="okr-grid">' + ok + '</div><div class="okr-del"><div class="okr-del-lbl">Deliverable</div><div class="okr-del-txt">' + m.deliverable + '</div></div>';
+}
+
+function renderRoadmap() {
+  if (!roadmapData) return;
+  var months = roadmapData.months;
+  var track = months.map(function(m, i){
+    return '<div class="mcard' + (i===activeMonth?' active':'') + '" onclick="selectMonth(' + i + ')" role="button" tabindex="0"><div class="mcard-num">Month ' + m.num + '</div><div class="mcard-name">' + m.name + '</div><div class="mcard-theme">' + m.theme + '</div><div class="mcard-pip"></div></div>';
+  }).join('');
+  document.getElementById('roadmap-area').innerHTML = '<div class="sep-row"><div class="sep-d"></div></div><div style="animation:fadeUp .45s ease both"><div class="sec-ey">6-Month Learning Architecture</div><div class="prog-title">' + roadmapData.programTitle + '</div><p class="prog-sub">' + roadmapData.programSummary + '</p><div class="timeline">' + track + '</div><div class="okr-panel" id="okr-panel">' + buildOkrInner(months[activeMonth], activeMonth) + '</div></div>';
+}
+
+function selectMonth(idx) {
+  activeMonth = idx;
+  document.querySelectorAll('.mcard').forEach(function(c, i){ c.classList.toggle('active', i===idx); });
+  var p = document.getElementById('okr-panel');
+  if (!p || !roadmapData) return;
+  p.style.animation = 'none';
+  p.offsetHeight;
+  p.style.animation = 'fadeUp .25s ease both';
+  p.innerHTML = buildOkrInner(roadmapData.months[idx], idx);
+}
+
+// ─────────────────────────────────────────────
+// ASSESSMENT
+// ─────────────────────────────────────────────
+async function renderAssessPanel() {
+  var area = document.getElementById('assess-area');
+  if (!roadmapData) {
+    area.innerHTML = '<div class="empty-wrap"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div><div class="empty-title">No curriculum yet</div><div class="empty-body">Generate a roadmap first, then return here for your Bloom\'s assessment.</div></div>';
+    return;
+  }
+  if (roadmapData.questions) { renderQuestions(roadmapData.questions); return; }
+  area.innerHTML = '<div class="spin-wrap"><div class="spinner"></div><span class="spin-label">Mapping to Bloom\'s Taxonomy…</span></div>';
+  await wait(800);
+  var qs = buildAssessment(roadmapData._parsed, roadmapData);
+  roadmapData.questions = qs;
+  renderQuestions(qs);
+}
+
+function renderQuestions(qs) {
+  var html = qs.map(function(q){
+    return '<div class="qcard"><div class="qnum">' + q.num + '</div><div class="qcont"><div class="qtxt">' + q.text + '</div><div class="qmeta"><span class="qmonth">' + q.month + '</span><span class="qtag">' + q.bloom + '</span><span class="qtag">' + q.type + '</span></div></div></div>';
+  }).join('');
+  document.getElementById('assess-area').innerHTML = '<div class="sec-ey" style="margin-bottom:5px">Knowledge Assessment</div><div class="prog-title" style="margin-bottom:18px">10 Bloom\'s Taxonomy-Mapped Questions</div><div class="q-list">' + html + '</div>';
+}
+
+// ─────────────────────────────────────────────
+// SAVE / LOAD
+// ─────────────────────────────────────────────
+function getSaved() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+  catch(e) { return []; }
+}
+
+function setSaved(arr) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); }
+  catch(e) { toast('Storage limit reached'); }
+}
+
+function saveRoadmap() {
+  if (!roadmapData) return;
+  var saved = getSaved();
+  var id = 'rm_' + Date.now();
+  var entry = {
+    id: id,
+    name: roadmapData.programTitle,
+    goal: roadmapData._goal || currentGoal,
+    ts: roadmapData._ts || Date.now(),
+    data: JSON.stringify(roadmapData)
+  };
+  saved.unshift(entry);
+  if (saved.length > 12) saved.pop();
+  setSaved(saved);
+  toast('✓ Roadmap saved');
+}
+
+function loadRoadmap(id) {
+  var saved = getSaved();
+  var entry = null;
+  for (var i = 0; i < saved.length; i++) { if (saved[i].id === id) { entry = saved[i]; break; } }
+  if (!entry) return;
+  try {
+    roadmapData = JSON.parse(entry.data);
+    currentGoal = entry.goal || '';
+    activeMonth = 0;
+    document.getElementById('goal-input').value = entry.goal || '';
+    setActionBtns(true);
+    switchTab('roadmap');
+    renderRoadmap();
+    toast('✓ Roadmap loaded');
+  } catch(e) { toast('Error loading roadmap'); }
+}
+
+function deleteRoadmap(id) {
+  var saved = getSaved().filter(function(e){ return e.id !== id; });
+  setSaved(saved);
+  renderSavedPanel();
+  toast('Roadmap deleted');
+}
+
+function renderSavedPanel() {
+  var saved = getSaved();
+  var area = document.getElementById('saved-area');
+  if (!saved.length) {
+    area.innerHTML = '<div class="empty-wrap"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></div><div class="empty-title">No saved roadmaps yet</div><div class="empty-body">Generate a roadmap and hit Save to store it here across sessions.</div></div>';
+    return;
+  }
+  var items = saved.map(function(e) {
+    var d = new Date(e.ts);
+    var ds = d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+    var short = e.goal && e.goal.length > 60 ? e.goal.substring(0,58)+'…' : (e.goal||'');
+    return '<div class="saved-item"><div class="saved-item-info"><div class="saved-item-name">' + e.name + '</div><div class="saved-item-meta">' + ds + ' · ' + short + '</div></div><div class="saved-actions"><button class="btn-primary-sm" onclick="loadRoadmap(\'' + e.id + '\')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>Load</button><button class="btn-icon danger" onclick="deleteRoadmap(\'' + e.id + '\')" title="Delete"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button></div></div>';
+  }).join('');
+  area.innerHTML = '<div class="saved-panel"><div class="saved-panel-title">Saved Roadmaps (' + saved.length + ')</div><div class="saved-list">' + items + '</div></div>';
+}
+
+// ─────────────────────────────────────────────
+// PDF EXPORT
+// ─────────────────────────────────────────────
+function exportPDF() {
+  if (!roadmapData) return;
+  // Show all panels for print
+  var assessPanel = document.getElementById('panel-assess');
+  var wasHidden = assessPanel.style.display === 'none';
+  assessPanel.style.display = 'block';
+  // Ensure assessment is generated
+  if (!roadmapData.questions) {
+    var qs = buildAssessment(roadmapData._parsed, roadmapData);
+    roadmapData.questions = qs;
+    renderQuestions(qs);
+  }
+  // Reset to first month for clean print
+  selectMonth(0);
+  setTimeout(function() {
+    window.print();
+    if (wasHidden) assessPanel.style.display = 'none';
+    toast('✓ Print dialog opened — choose "Save as PDF"');
+  }, 350);
+}
+
+// ─────────────────────────────────────────────
+// PRESENTER MODE
+// ─────────────────────────────────────────────
+function openPresenter() {
+  if (!roadmapData) return;
+  psIndex = 0;
+  document.getElementById('presenter-overlay').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  renderPresenterSlide();
+  renderPresenterDots();
+  document.addEventListener('keydown', psKeyHandler);
+}
+
+function closePresenter() {
+  document.getElementById('presenter-overlay').style.display = 'none';
+  document.body.style.overflow = '';
+  document.removeEventListener('keydown', psKeyHandler);
+}
+
+function psKeyHandler(e) {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') psNav(1);
+  else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') psNav(-1);
+  else if (e.key === 'Escape') closePresenter();
+}
+
+function psNav(dir) {
+  if (!roadmapData) return;
+  psIndex = Math.max(0, Math.min(5, psIndex + dir));
+  renderPresenterSlide();
+  renderPresenterDots();
+}
+
+function renderPresenterSlide() {
+  if (!roadmapData) return;
+  var m = roadmapData.months[psIndex];
+  document.getElementById('ps-prog').textContent = (psIndex+1) + ' / 6';
+  var okrs = m.okrs.map(function(o){
+    return '<div class="ps-okr"><div class="ps-okr-type">' + o.type + '</div><div class="ps-okr-txt">' + o.text + '</div></div>';
+  }).join('');
+  document.getElementById('ps-stage').innerHTML = '<div class="presenter-slide"><div class="ps-month-num">Month ' + m.num + ' · ' + roadmapData.programTitle + '</div><div class="ps-title">' + m.name + '</div><div class="ps-theme">' + m.theme + '</div><div class="ps-okrs">' + okrs + '</div><div class="ps-del"><div class="ps-del-lbl">Deliverable</div><div class="ps-del-txt">' + m.deliverable + '</div></div></div>';
+}
+
+function renderPresenterDots() {
+  var dots = '';
+  for (var i = 0; i < 6; i++) {
+    dots += '<div class="pdot' + (i===psIndex?' active':'') + '" onclick="psIndex=' + i + ';renderPresenterSlide();renderPresenterDots()" title="Month ' + (i+1) + '"></div>';
+  }
+  document.getElementById('ps-dots').innerHTML = dots;
+}
+</script>
+</body>
+</html>
